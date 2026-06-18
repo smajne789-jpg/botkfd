@@ -78,7 +78,14 @@ def http_json(url: str, *, headers: dict | None = None, params: dict | None = No
         separator = "&" if "?" in url else "?"
         url = f"{url}{separator}{query}"
 
-    request = urllib.request.Request(url, headers=headers or {}, method="GET")
+    request_headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "Accept": "application/json",
+    }
+    if headers:
+        request_headers.update(headers)
+
+    request = urllib.request.Request(url, headers=request_headers, method="GET")
     try:
         with urllib.request.urlopen(request, timeout=30) as response:
             return json.loads(response.read().decode("utf-8"))
