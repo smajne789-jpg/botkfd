@@ -28,19 +28,48 @@ TELEGRAM_API_BASE = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}" if TELEG
 CRYPTO_PAY_API_BASE = "https://pay.crypt.bot/api"
 
 
-def require_env() -> None:
+def save_config(telegram_bot_token: str, crypto_pay_api_token: str) -> None:
+    CONFIG_PATH.write_text(
+        json.dumps(
+            {
+                "telegram_bot_token": telegram_bot_token,
+                "crypto_pay_api_token": crypto_pay_api_token,
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+
+def ensure_config() -> tuple[str, str]:
+    telegram_bot_token = TELEGRAM_BOT_TOKEN.strip()
+    crypto_pay_api_token = CRYPTO_PAY_API_TOKEN.strip()
+
+    if telegram_bot_token and crypto_pay_api_token:
+        return telegram_bot_token, crypto_pay_api_token
+
+    print("Нужна первичная настройка бота.")
+    print("Если токен уже есть, просто вставьте его и нажмите Enter.")
+
+    if not telegram_bot_token:
+        telegram_bot_token = input("Введите Telegram bot token: ").strip()
+    if not crypto_pay_api_token:
+        crypto_pay_api_token = input("Введите Crypto Pay API token: ").strip()
+
     missing = []
-    if not TELEGRAM_BOT_TOKEN:
+    if not telegram_bot_token:
         missing.append("telegram_bot_token")
-    if not CRYPTO_PAY_API_TOKEN:
+    if not crypto_pay_api_token:
         missing.append("crypto_pay_api_token")
     if missing:
-        print(
-            "Missing config values: "
-            + ", ".join(missing)
-            + f"\nFill them in {CONFIG_PATH.name} or set environment variables."
-        )
+        print("Не заполнены поля: " + ", ".join(missing))
         sys.exit(1)
+
+    save_config(telegram_bot_token, crypto_pay_api_token)
+    print(f"Токены сохранены в {CONFIG_PATH.name}.")
+    return telegram_bot_token, crypto_pay_api_token
 
 
 def http_json(url: str, *, headers: dict | None = None, params: dict | None = None) -> dict:
@@ -231,5 +260,8 @@ def poll() -> None:
 
 
 if __name__ == "__main__":
-    require_env()
+    telegram_token, crypto_token = ensure_config()
+    TELEGRAM_BOT_TOKEN = telegram_token
+    CRYPTO_PAY_API_TOKEN = crypto_token
+    TELEGRAM_API_BASE = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}"
     poll()
