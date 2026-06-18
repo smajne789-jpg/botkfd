@@ -16,8 +16,8 @@ def load_config() -> dict:
     if CONFIG_PATH.exists():
         config = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
     return {
-        "telegram_bot_token": os.getenv("8675520412:AAE8Esbt_1J0EIkh2K_WnoPOkLVpbH8iP0g") or config.get("telegram_bot_token", ""),
-        "crypto_pay_api_token": os.getenv("597752:AAtGGHH5YV7omji2273SEDeK5uSUGk9ml61") or config.get("crypto_pay_api_token", ""),
+        "telegram_bot_token": os.getenv("TELEGRAM_BOT_TOKEN") or config.get("telegram_bot_token", ""),
+        "crypto_pay_api_token": os.getenv("CRYPTO_PAY_API_TOKEN") or config.get("crypto_pay_api_token", ""),
     }
 
 
