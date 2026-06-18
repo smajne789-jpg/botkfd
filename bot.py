@@ -7,8 +7,8 @@ import urllib.parse
 import urllib.request
 
 
-TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-CRYPTO_PAY_API_TOKEN = os.getenv("CRYPTO_PAY_API_TOKEN")
+TELEGRAM_BOT_TOKEN = os.getenv("8675520412:AAE8Esbt_1J0EIkh2K_WnoPOkLVpbH8iP0g")
+CRYPTO_PAY_API_TOKEN = os.getenv("597752:AAtGGHH5YV7omji2273SEDeK5uSUGk9ml61")
 TELEGRAM_API_BASE = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}" if TELEGRAM_BOT_TOKEN else None
 CRYPTO_PAY_API_BASE = "https://pay.crypt.bot/api"
 
